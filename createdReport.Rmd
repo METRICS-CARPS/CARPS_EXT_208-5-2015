@@ -1,0 +1,405 @@
+---
+output:
+  html_document: default
+  pdf_document: default
+---
+--
+title: "CARPS Reproducibility Report"
+output:
+  html_document:
+    toc: true
+    toc_float: true
+---
+# Report Details
+
+```{r}
+articleID <- "EXT_208-5-2015" # insert the article ID code here e.g., "10-3-2015_PS"
+reportType <- 'pilot' # specify whether this is the 'pilot' report or 'final' report
+pilotNames <- "Vivian Zhang" # insert the pilot's name here e.g., "Tom Hardwicke".  If there are multiple cpilots enter both names in a character string e.g., "Tom Hardwicke, Bob Dylan"
+copilotNames <- NA # # insert the co-pilot's name here e.g., "Michael Frank". If there are multiple co-pilots enter both names in a character string e.g., "Tom Hardwicke, Bob Dylan"
+pilotTTC <- NA # insert the pilot's estimated time to complete (in minutes, fine to approximate) e.g., 120
+copilotTTC <- NA # insert the co-pilot's estimated time to complete (in minutes, fine to approximate) e.g., 120
+pilotStartDate <- 10/19/2018 # insert the pilot's start date in US format e.g., as.Date("01/25/18", format = "%m/%d/%y")
+copilotStartDate <- NA # insert the co-pilot's start date in US format e.g., as.Date("01/25/18", format = "%m/%d/%y")
+completionDate <- NA # copilot insert the date of final report completion (after any necessary rounds of author assistance) in US format e.g., as.Date("01/25/18", format = "%m/%d/%y")
+```
+
+#### Methods summary: 
+The study tested 64 American participants and 67 Korean participants who are undergraduate students. The researchers selected 45 pairs of Korean politicians from Assembly election, and 45 pairs of American politicians in gubernatorial and senatorial elections of the same genders. Images of these political condidates' faces were shown to participants on a computer screen, and participants indicated which of each pair they perceived to be more competent; then, the same pairs of political candidates were shown again and participants indicated which of each pair they would vote for in a hypothetical election.In hypothetical elections, both Koreans and Americans voted based on perceived competence inferred from facial appearance. However, according to real election results, perceived competence was a far better predictor of the outcomes of real elections held in the US than of those in Korea.
+
+
+#### Target outcomes paragraph:
+For this article you should focus on the findings reported in the results section pertaining to "Prediction of outcomes in actual elections in Korea and the United States".
+
+Specifically, you should attempt to reproduce all descriptive and inferential analyses reported in the text below and associated tables/figures:
+
+Prediction of outcomes in actual elections in Korea and the United States. Next, we investigated whether perceived competence, for which there was consensus within and between cultures, could predict election results in the United States and Korea. The percentage of successfully elected candidates rated as more competent was calculated separately for each participant for each election location. These scores were submitted to a 2 (participant’s culture: Koreans vs. Americans) × 2 (election location: Korea vs. United States) mixed analysis of variance (ANOVA) with election location as a within-subjects factor. There was a strong main effect of election location such that perceived competence was a better predictor of the outcome of American elections than of Korean elections, F(1, 129) = 115.98, p < .001, ηp2 = .47. Note that the significance of this election-location effect was driven by actual voters in real elections, not by participants in the present research. More specifically, this finding suggests that American voters in real elections voted for the competent-looking candidates, whereas this tendency was significantly weaker among Korean voters in real elections. The strength of this effect is illustrated by the means (Korean elections: 51.38%; American elections: 61.13%) and confidence intervals associated with the effect, difference = 9.75 percentage points, 95% CI = [7.94, 11.57]. There was no effect of participants’ culture, F < 1. There was, however, a Participant’s Culture × Election Location interaction, F(1, 129) = 6.17, p = .014, ηp2 = .05. Although the interaction was statistically significant, the 95% CIs did not clearly separate the interaction means. We discuss this interaction in the next section.
+
+Korean participants. Next, we examined the consistency of the main effect within each culture. First, among Koreans, candidates who were perceived as more competent won in 61.92% of American elections but in only 49.98% of Korean elections, t(66) = 9.08, p < .001 (Fig. 1). The effect size for the difference (11.94 percentage points) was large, d = 1.11, and even the lower limit of the 95% CI was larger than zero, 95% CI = [9.32, 14.57]. Moreover, Koreans’ competence judgments predicted the U.S. election results at a level better than chance (i.e., 50%), difference = 11.92 percentage points, d = 2.73, 95% CI = [9.77, 14.07]. However, Koreans’ competence judgments predicted Korean election results at chance levels, difference = −0.02 percentage points, 95% CI = [−2.05, 2.01]. We also note that the difference from chance for Koreans predicting American election results was significant, t(66) = 11.08, p < .00. This was not the case for Koreans predicting Korean election results, t(66) = 0.02, n.s. American participants. Conceptually, the same pattern was observed for Americans (Fig. 1). For Americans, more winning candidates were perceived as more competent than their competitors in American elections (60.31%) than in Korean elections (52.85%). Again, the effect size for the difference (7.46 percentage points) was large, d = 0.70, and the lower limit of the 95% CI was above zero,95% CI = [5.01, 9.92]. The difference was statistically significant, t(63) = 6.09, p < .001. In addition, Americans’ competence judgments predicted American election results at a level better than chance, difference = 10.31 percentage points, t(63) = 11.53, 95% CI = [8.52, 12.10], p < .001, d = 2.90. However, for Korean elections, the difference from chance was relatively small (2.85 percentage points), and the lower limit of the 95% CI was close to zero, 95% CI = [0.49, 5.21], although the difference was significant, t(63) = 2.41, p = .019, d = 0.61.
+
+
+
+```{r global_options, include=FALSE}
+# sets up some formatting options for the R Markdown document
+knitr::opts_chunk$set(echo=TRUE, warning=FALSE, message=FALSE)
+```
+
+# Step 1: Load packages and prepare report object
+
+```{r}
+# load packages
+library(tidyverse) # for data munging
+library(knitr) # for kable table formating
+library(haven) # import and export 'SPSS', 'Stata' and 'SAS' Files
+library(readxl) # import excel files
+library(CARPSreports) # custom report functions
+library(ez)
+library(DescTools)
+library(readxl)
+library(lsr)
+```
+
+
+```{r}
+# Pilot/copilot: Do not make changes to this code chunk!
+# Prepare report object. This will be updated automatically by the reproCheck function each time values are compared
+reportObject <- data.frame(dummyRow = TRUE, reportedValue = NA, obtainedValue = NA, valueType = NA, percentageError = NA, comparisonOutcome = NA, eyeballCheck = NA)
+```
+
+# Step 2: Load data
+
+```{r}
+election_data_JNA <- read_excel("data/election_data_JNA.xlsx")
+KOR_consensus <- read_excel("data/KOR_consensus.xlsx")
+US_consensus <- read_excel("data/US_consensus.xlsx")
+```
+
+
+# Step 3: Tidy data
+```{r}
+d.tidy <- election_data_JNA %>%
+  select("ID", "culture","Pro_KOR", "Pro_US")
+
+# rename variables
+d.tidy <- d.tidy %>%
+  rename(subject_id = "ID",
+         participants = "culture",
+         KE_accuracy = "Pro_KOR",
+         UE_accuracy = "Pro_US")
+d.long <- d.tidy %>%
+  gather(country, accuracy, KE_accuracy, UE_accuracy)
+d.long <- d.long %>%
+  mutate(location = ifelse(country == "UE_accuracy", 1, 2),
+         group = ifelse(participants ==1 & location ==1, 1,
+                        ifelse(participants ==1 & location ==2, 2,
+                               ifelse(participants ==2 & location ==1, 3,
+                                      ifelse(participants ==2 & location ==2, 4,5
+                                             )))))
+
+d.ready <- d.long %>%
+  select("subject_id","group", "participants", "location", "accuracy")
+
+  d.ready$participants[d.ready$participants == 1] = "US"
+  d.ready$participants[d.ready$participants == 2] <- "Korea"
+  d.ready$location[d.ready$location == 1] <- "US"
+  d.ready$location[d.ready$location == 2] <- "Korea"
+
+d.ready$subject_id = factor(d.ready$subject_id)
+d.ready$group = factor(d.ready$group)
+d.ready$location = factor(d.ready$location)
+d.ready$participants = factor(d.ready$participants)
+d.ready$accuracy = as.numeric(d.ready$accuracy)
+
+
+```
+
+# Step 4: Descriptive and Inferential Statistics
+```{r}
+# Check assumptions of ANOVA
+# Assumption 1: no ouliers
+par(mfrow = c(2,2))
+for (i in levels(d.ready$participants)) {
+  for (j in levels(d.ready$location)){
+    hist(d.ready[d.ready$participants == i & d.ready$location == j, ]$accuracy,
+         xlab = "accuracy",
+         main = paste0(i, " / ", j))
+  }
+}
+par(mfrow=c(1,1))
+
+# Assumption 2: equal variance assumptions
+# Bartelett Test
+bartlett.test(accuracy ~ group, data = d.ready)
+
+# Results: 1. there is no outliers. 
+#          2. K^2(3) = 5.04, p = 0.169 >0.05. Thus, there is no significant               variance within group across the 4 groups.
+```
+
+```{r}
+d.mean = aggregate(accuracy~ participants*location, data = d.ready, FUN = mean)
+d.sd = aggregate(accuracy~ participants*location, data = d.ready, FUN = sd)
+d.n = aggregate(accuracy~ participants*location, data = d.ready, FUN = length)
+
+
+names(d.sd)[3] = "sd"
+names(d.n)[3] = "n"
+dSummary = cbind(d.mean, d.sd$sd, d.n$n)
+names(dSummary)[4] = "sd"
+names(dSummary)[5] = "n"
+dSummary$se = dSummary$sd/ dSummary$n^0.5
+
+# Visualization (Fig 1 in paper)
+ggplot(data = dSummary, aes(x = participants, y = accuracy, fill = location))+
+  geom_bar(position = position_dodge(),stat = "identity") +
+  geom_errorbar(
+    aes(ymax = accuracy + se,
+        ymin = accuracy - se),
+    width = 0.5,
+    position = position_dodge(.9))+
+  coord_cartesian(ylim = c(40,70))
+```
+
+
+```{r}
+# ANOVA
+d.aov = aov(accuracy ~ as.factor(participants)*as.factor(location) +
+Error(subject_id/location), data = d.ready)
+summary(d.aov)
+EtaSq(d.aov, type = 1, anova = TRUE)
+
+```
+```{r}
+## Prediction of outcomes in actual elections in Korea and the United States
+# Maineffect of Election Location
+reportObject <- reproCheck(reportedValue = '1', obtainedValue = 1, valueType = 'df')
+reportObject <- reproCheck(reportedValue = '129', obtainedValue = 129, valueType = 'df')
+reportObject <- reproCheck(reportedValue = '115.98', obtainedValue = 117.266, valueType = 'F')
+# reportObject <- reproCheck(reportedValue = '< 0.001', obtainedValue = 7.78e-20, valueType = 'p')
+# p = 7.78e-20 < 0.001 MATCH
+reportObject <- reproCheck(reportedValue = '0.47', obtainedValue = 0.48, valueType = 'pes')
+
+# Participant & Location Interaction
+reportObject <- reproCheck(reportedValue = '1', obtainedValue = 1, valueType = 'df')
+reportObject <- reproCheck(reportedValue = '129', obtainedValue = 129, valueType = 'df')
+reportObject <- reproCheck(reportedValue = '6.17', obtainedValue = 6.17, valueType = 'F')
+reportObject <- reproCheck(reportedValue = '0.014', obtainedValue = 0.0143, valueType = 'p')
+reportObject <- reproCheck(reportedValue = '0.05', obtainedValue = 0.05, valueType = 'pes')
+```
+
+```{r}
+## Strength of Election Location Main Effect
+t.test(accuracy ~ location, data = d.ready, conf.level = .95)
+# Difference
+difference = 61.13656 - 51.38253
+difference
+```
+
+```{r}
+## Difference between Korean and the US, and Confidence Interval
+# Difference between means
+reportObject <- reproCheck(reportedValue = '51.38', obtainedValue = 51.38, valueType = 'mean')
+reportObject <- reproCheck(reportedValue = '61.13', obtainedValue = 61.14, valueType = 'mean')
+reportObject <- reproCheck(reportedValue = '9.75', obtainedValue = 9.75,
+valueType = 'other')
+# Confidence Interval
+reportObject <- reproCheck(reportedValue = '7.94', obtainedValue = 7.68, valueType = 'ci')
+reportObject <- reproCheck(reportedValue = '11.57', obtainedValue = 11.83, valueType = 'ci')
+
+```
+
+```{r}
+## Details of Participants and Location Interaction
+# Korean Participants
+d.K <- d.ready %>%
+filter(participants == "Korea") %>%
+select(-c ("group", "participants"))
+d.K <- d.K %>%
+spread(location, accuracy)
+t.test(d.K$Korea, d.K$US, data = d.K, paired = TRUE)
+mean(d.K$Korea)
+mean(d.K$US)
+cohensD(x = d.K$Korea, y = d.K$US)
+
+# cohen.d (d = d.K$Korea, f = d.K$US)
+```
+
+```{r}
+# Difference between means
+reportObject <- reproCheck(reportedValue = '61.92', obtainedValue = 61.92, valueType = 'mean')
+reportObject <- reproCheck(reportedValue = '49.98', obtainedValue = 49.98, valueType = 'mean')
+reportObject <- reproCheck(reportedValue = '11.94', obtainedValue = 11.94,
+valueType = 'mean')
+# T-test results
+reportObject <- reproCheck(reportedValue = '66', obtainedValue = 66, valueType = 'df')
+reportObject <- reproCheck(reportedValue = '9.08', obtainedValue = 9.08, valueType = 't')
+# reportObject <- reproCheck(reportedValue = '< 0.001', obtainedValue = 3.106e-13, valueType = 'p')
+# p = 3.106e-13 < 0.001 MATCH
+# Effect size
+reportObject <- reproCheck(reportedValue = '1.11', obtainedValue = 1.39, valueType = 'd')
+# Confidence Interval
+reportObject <- reproCheck(reportedValue = '9.32', obtainedValue = 9.32, valueType = 'ci')
+reportObject <- reproCheck(reportedValue = '14.57', obtainedValue = 14.57, valueType = 'ci')
+```
+
+```{r}
+# Korean's prediction of US and Korea election compared to chance
+diff_K <- d.K$Korea - 50
+t.test(diff_K, mu = 0)
+cohensD(x = diff_K, mu = 0)
+diff_U <- d.K$US - 50
+t.test(diff_U, mu = 0)
+cohensD(x = diff_U, mu = 0)
+```
+
+```{r}
+## Koreans predict US election
+# T-test results
+reportObject <- reproCheck(reportedValue = '66', obtainedValue = 66, valueType = 'df')
+reportObject <- reproCheck(reportedValue = '11.08', obtainedValue = 11.08, valueType = 't')
+# reportObject <- reproCheck(reportedValue = '< 0.001', obtainedValue < 2.2 e-16, valueType = 'p')
+# p < 2.2 e-16 < 0.001 MATCH
+# Effect size
+reportObject <- reproCheck(reportedValue = '2.73', obtainedValue = 1.35, valueType = 'd')
+# Difference and Confidence Interval
+reportObject <- reproCheck(reportedValue = '11.92', obtainedValue = 11.92, valueType = 'mean')
+reportObject <- reproCheck(reportedValue = '9.77', obtainedValue = 9.77, valueType = 'ci')
+reportObject <- reproCheck(reportedValue = '14.07', obtainedValue = 14.07, valueType = 'ci')
+## Koreans predict Korean election
+# T-test results
+reportObject <- reproCheck(reportedValue = '66', obtainedValue = 66, valueType = 'df')
+reportObject <- reproCheck(reportedValue = '0.02', obtainedValue = 0.02, valueType = 't')
+# Difference and Confidence Interval
+reportObject <- reproCheck(reportedValue = '-0.02', obtainedValue = -0.02, valueType = 'mean')
+reportObject <- reproCheck(reportedValue = '-2.05', obtainedValue = -2.05, valueType = 'ci')
+reportObject <- reproCheck(reportedValue = '2.01', obtainedValue = 2.01, valueType = 'ci')
+```
+
+```{r}
+## Details of Participants and Location Interaction
+# US Participants
+d.U <- d.ready %>%
+filter(participants == "US") %>%
+select(-c ("group", "participants"))
+d.U <- d.U %>%
+spread(location, accuracy)
+t.test(d.U$Korea, d.U$US, data = d.K, paired = TRUE)
+d <- cohensD(x = d.U$Korea, y = d.U$US)
+mean(d.U$Korea)
+mean(d.U$US)
+d
+```
+
+```{r}
+# Difference between means
+reportObject <- reproCheck(reportedValue = '60.31', obtainedValue = 60.31, valueType = 'mean')
+reportObject <- reproCheck(reportedValue = '52.85', obtainedValue = 52.85, valueType = 'mean')
+reportObject <- reproCheck(reportedValue = '7.46', obtainedValue = 7.47,
+valueType = 'mean')
+# T-test results
+reportObject <- reproCheck(reportedValue = '63', obtainedValue = 63, valueType = 'df')
+reportObject <- reproCheck(reportedValue = '6.09', obtainedValue = 6.09, valueType = 't')
+# reportObject <- reproCheck(reportedValue = '< 0.001', obtainedValue = 7.593e-08, valueType = 'p')
+# p = 7.593e-08 < 0.001 MATCH
+# Effect size
+reportObject <- reproCheck(reportedValue = '0.70', obtainedValue = 0.89, valueType = 'd')
+# Confidence Interval
+reportObject <- reproCheck(reportedValue = '5.01', obtainedValue = 5.01, valueType = 'ci')
+reportObject <- reproCheck(reportedValue = '9.92', obtainedValue = 9.92, valueType = 'ci')
+
+```
+
+```{r}
+# US's prediction of US and Korea election compared to chance
+diff_K <- d.U$Korea - 50
+t.test(diff_K, mu = 0)
+cohensD(x = diff_K, mu = 0)
+diff_U <- d.U$US - 50
+t.test(diff_U, mu = 0)
+cohensD(x = diff_U, mu = 0)
+```
+
+```{r}
+##US predict US election
+# T-test results
+reportObject <- reproCheck(reportedValue = '63', obtainedValue = 63, valueType = 'df')
+reportObject <- reproCheck(reportedValue = '11.53', obtainedValue = 11.53, valueType = 't')
+# reportObject <- reproCheck(reportedValue = '< 0.001', obtainedValue < 2.2 e-16, valueType = 'p')
+# p < 2.2 e-16 < 0.001 MATCH
+# Effect size
+reportObject <- reproCheck(reportedValue = '2.90', obtainedValue = 1.44, valueType = 'd')
+# Difference and Confidence Interval
+reportObject <- reproCheck(reportedValue = '10.31', obtainedValue = 10.31, valueType = 'mean')
+reportObject <- reproCheck(reportedValue = '8.52', obtainedValue = 8.52, valueType = 'ci')
+reportObject <- reproCheck(reportedValue = '12.10', obtainedValue = 12.10, valueType = 'ci')
+
+
+## US predict Korean election
+# T-test results
+reportObject <- reproCheck(reportedValue = '63', obtainedValue = 63, valueType = 'df')
+reportObject <- reproCheck(reportedValue = '2.41', obtainedValue = 2.41, valueType = 't')
+reportObject <- reproCheck(reportedValue = '0.019', obtainedValue = 0.019, valueType = 'p')
+# Effect size
+reportObject <- reproCheck(reportedValue = '0.61', obtainedValue = 1.44, valueType = 'd')
+# Difference and Confidence Interval
+reportObject <- reproCheck(reportedValue = '2.85', obtainedValue = 2.85, valueType = 'mean')
+reportObject <- reproCheck(reportedValue = '0.49', obtainedValue = 0.49, valueType = 'ci')
+reportObject <- reproCheck(reportedValue = '5.21', obtainedValue = 5.21, valueType = 'ci')
+
+```
+
+# Step 4: Conclusion
+
+Nearly all the exact numerical outputs and figure reported in the paper match with those produced in this report. The only thing that created major errors are effect sizes (cohen's d). All the effect sizes reported in the paper do not match exact numbers in this report, although our effect sizes match generally in terms of if they are big/medium/small effects. Pilot author used "CohensD" function from lsr package and "cohen.d" function from effsize package. I suspect that the author of the study calculated cohen's d with different functions, from power analysis or by sum of squares, and thus have errors.
+
+```{r}
+Author_Assistance = FALSE # was author assistance provided? (if so, enter TRUE)
+
+Insufficient_Information_Errors <- 0 # how many discrete insufficient information issues did you encounter?
+
+# Assess the causal locus (discrete reproducibility issues) of any reproducibility errors. Note that there doesn't necessarily have to be a one-to-one correspondance between discrete reproducibility issues and reproducibility errors. For example, it could be that the original article neglects to mention that a Greenhouse-Geisser correct was applied to ANOVA outcomes. This might result in multiple reproducibility errors, but there is a single causal locus (discrete reproducibility issue).
+
+locus_typo <- NA # how many discrete issues did you encounter that related to typographical errors?
+locus_specification <- NA # how many discrete issues did you encounter that related to incomplete, incorrect, or unclear specification of the original analyses?
+locus_analysis <- NA # how many discrete issues did you encounter that related to errors in the authors' original analyses?
+locus_data <- NA # how many discrete issues did you encounter that related to errors in the data files shared by the authors?
+locus_unidentified <- NA # how many discrete issues were there for which you could not identify the cause
+
+Affects_Conclusion <- NA # Do any reproducibility issues encounter appear to affect the conclusions made in the original article? TRUE, FALSE, or NA. This is a subjective judgement, but you should taking into account multiple factors, such as the presence/absence of decision errors, the number of target outcomes that could not be reproduced, the type of outcomes that could or could not be reproduced, the difference in magnitude of effect sizes, and the predictions of the specific hypothesis under scrutiny.
+```
+
+[PILOT/COPILOT DOD NOT EDIT THE CODE CHUNK BELOW]
+
+```{r}
+reportObject <- reportObject %>%
+  filter(dummyRow == FALSE) %>% # remove the dummy row
+  select(-dummyRow) %>% # remove dummy row designation
+  mutate(articleID = articleID) %>% # add variables to report 
+  select(articleID, everything()) # make articleID first column
+
+# decide on final outcome
+if(any(reportObject$comparisonOutcome != "MATCH") | Insufficient_Information_Errors > 0){
+  finalOutcome <- "Failure without author assistance"
+  if(Author_Assistance == T){
+    finalOutcome <- "Failure despite author assistance"
+  }
+}else{
+  finalOutcome <- "Success without author assistance"
+  if(Author_Assistance == T){
+    finalOutcome <- "Success with author assistance"
+  }
+}
+
+# collate report extra details
+reportExtras <- data.frame(articleID, pilotNames, copilotNames, pilotTTC, copilotTTC, pilotStartDate, copilotStartDate, completionDate, Author_Assistance, finalOutcome, Insufficient_Information_Errors, locus_typo, locus_specification, locus_analysis, locus_data, locus_unidentified)
+
+# save report objects
+if(reportType == "pilot"){
+  write_csv(reportObject, "pilotReportDetailed.csv")
+  write_csv(reportExtras, "pilotReportExtras.csv")
+}
+
+if(reportType == "final"){
+  write_csv(reportObject, "finalReportDetailed.csv")
+  write_csv(reportExtras, "finalReportExtras.csv")
+}
+```

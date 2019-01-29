@@ -1,0 +1,10 @@
+name: Publish Document
+title:
+username:
+account: rpubs
+server: rpubs.com
+hostUrl: rpubs.com
+appId: https://api.rpubs.com/api/v1/document/432663/ae6a9cd6ebaa46bf9d59b541092eacfa
+bundleId: https://api.rpubs.com/api/v1/document/432663/ae6a9cd6ebaa46bf9d59b541092eacfa
+url: http://rpubs.com/Vivian_Zhang/432663
+when: 1540406357.94554
